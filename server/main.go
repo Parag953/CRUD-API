@@ -22,15 +22,6 @@ type user struct {
 	DOB        string `json:"dob"`
 }
 
-func postUser(w http.ResponseWriter, r *http.Request) {
-
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	var newuser user
-	json.Unmarshal(reqBody, &newuser)
-	addUser(newuser.Name, newuser.Contact_no, newuser.DOB)
-
-}
-
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	Id, _ := strconv.Atoi(vars["id"])
@@ -98,18 +89,6 @@ func deleteUserById(Id int) error {
 		return fmt.Errorf("can't delete due to error: %s", err)
 	}
 	fmt.Printf("User with Id=%d is deleted\n", Id)
-
-	return nil
-}
-
-func addUser(name string, contact_no string, DOB string) error {
-
-	res, err := db.Exec("insert into userinfo(name, contact_no , DOB) Values ( ? ,? ,? )", name, contact_no, DOB)
-	if err != nil {
-		return fmt.Errorf("can't add due to error: %s", err)
-	}
-	id, _ := res.LastInsertId()
-	fmt.Println("Last inserted id is: ", id)
 
 	return nil
 }
