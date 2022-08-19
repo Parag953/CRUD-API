@@ -2,9 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -20,20 +18,6 @@ type user struct {
 	Name       string `json:"name"`
 	Contact_no string `json:"contact_no"`
 	DOB        string `json:"dob"`
-}
-
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	Id, _ := strconv.Atoi(vars["id"])
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	var changedUser user
-	json.Unmarshal(reqBody, &changedUser)
-
-	err := UpdateUserById(Id, changedUser.Name, changedUser.Contact_no, changedUser.DOB)
-
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -72,15 +56,6 @@ func main() {
 	r.HandleFunc("/users/{id}", DeleteUser).Methods("DELETE") // ----> Delete a grocery
 	log.Fatal(http.ListenAndServe(":8080", r))
 
-}
-
-func UpdateUserById(Id int, name string, contact_no string, DOB string) error {
-	_, err := db.Exec("UPDATE userinfo SET name = ?, contact_no= ?, DOB= ? WHERE id = ?;", name, contact_no, DOB, Id)
-	if err != nil {
-		return fmt.Errorf("can't update due to error: %s", err)
-	}
-
-	return nil
 }
 
 func deleteUserById(Id int) error {
