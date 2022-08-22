@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getUserById(w http.ResponseWriter, r *http.Request) {
+func GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 
@@ -19,14 +19,14 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 	if er != nil {
 		log.Fatal(er)
 	}
-	usr, err := userById(Id)
+	usr, err := UserById(Id)
 	if err != nil {
 		log.Fatal()
 	}
 	json.NewEncoder(w).Encode(usr)
 }
 
-func userById(Id int) (*user, error) {
+func UserById(Id int) (*user, error) {
 	// An albums slice to hold data from returned rows.
 	var usr user
 
