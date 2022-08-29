@@ -14,7 +14,7 @@ import (
 // type user struct {
 // 	Id         int    `json:"id"`
 // 	Name       string `json:"name"`
-// 	Contact_no string `json:"contact_no"`
+// 	Contact_no string `json:"contactNo"`
 // 	DOB        string `json:"dob"`
 // }
 
@@ -40,16 +40,22 @@ func main() {
 	// 	log.Fatal(pingErr)
 	// }
 	// fmt.Println("Connected!")
+
+	// read about all the http codes 2xx,3xx,4xx,5xx		:OK
+	// difference between println and logger and all log levels
+	// different types of request body in http post
+	// soap vs rest
+	// camelCase and snake_case
 	err := server.DbConnect()
 	if err != nil {
-		fmt.Println("Error while connecting to database. Error:", err)
-
+		fmt.Println("Error while connecting to database.", err)
 	}
+	log.Println("Database Connected")
 	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/users/{id}", server.GetUserById).Methods("GET")
 	r.HandleFunc("/users", server.PostUser).Methods("POST")
-	r.HandleFunc("/users/{id}", server.UpdateUser).Methods("PUT")    // ----> To update a grocery
-	r.HandleFunc("/users/{id}", server.DeleteUser).Methods("DELETE") // ----> Delete a grocery
+	r.HandleFunc("/users/{id}", server.UpdateUser).Methods("PUT")
+	r.HandleFunc("/users/{id}", server.DeleteUser).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":8080", r))
 
 }
